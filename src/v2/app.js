@@ -1,6 +1,7 @@
 // 元素騎士放送局 v2 — ビルドなしの単一モジュール。
 // 外部から来た文字列（YouTubeのタイトル等）は必ず textContent で入れる。innerHTML は使わない。
-import { LocalStore, mountBoard, keepAlive } from './board.js';
+import { LocalStore, mountBoard, keepAlive, answerInvite } from './board.js';
+import { createNotifier, openFloating } from './notify.js';
 
 /* ---------- 小さな道具 ---------- */
 const h = (tag, attrs = {}, ...kids) => {
@@ -89,8 +90,9 @@ const upcoming = () => D.schedule.items.filter(i => i.status === 'upcoming' && D
 const always = new Set(); let viewTicks = new Set(); let deskTicks = new Set();
 setInterval(() => { for (const set of [always, viewTicks, deskTicks]) for (const fn of set) fn(); }, 1000);
 
+let pipWin = null;
 const flash = () => {
-  const el = $('flash'); el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+  for (const el of [$('flash'), pipWin?.document.getElementById('flash')]) { if (!el) continue; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }
 };
 
 /* ---------- 上の帯・時計・テーマ ---------- */
@@ -361,8 +363,9 @@ const nextDaily = hhmm => {
 };
 const baseTitle = document.title;
 
+const deskEl = $('desk');
 const renderDesk = () => {
-  const el = $('desk'); const fid = document.activeElement?.dataset?.fid;
+  const el = deskEl; const fid = el.ownerDocument.activeElement?.dataset?.fid;
   deskTicks = new Set();
   const again = () => { save(); renderDesk(); };
 
@@ -459,10 +462,26 @@ const renderDesk = () => {
   const memo = h('div', { class: 'dcard' }, h('div', { class: 'dhead' }, h('h3', { text: 'メモ' })),
     h('textarea', { rows: '4', maxlength: '2000', placeholder: 'ドロップ、買うもの、次にやること…', 'aria-label': 'メモ', 'data-fid': 'memo', oninput: ev => { S.memo = ev.target.value; save(); } }, S.memo || ''));
 
-  el.replaceChildren(
+  // 知らせの設定
+  const perm = notifier.permission;
+  const notifyCard = h('div', { class: 'dcard' },
+    h('div', { class: 'dhead' }, h('h3', { text: '知らせの受け取り' }), h('small', { class: 'muted', text: '参加・勧誘が届いたとき' })),
+    h('label', { class: 'toggle' }, h('input', { type: 'checkbox', ...(notifier.settings.sound ? { checked: true } : {}), onchange: e => notifier.setSound(e.target.checked) }), h('span', { text: '音を鳴らす（全画面でも気づける）' })),
+    perm === 'granted' ? h('p', { class: 'small', text: '✓ パソコンの通知：オン' })
+      : perm === 'denied' ? h('p', { class: 'muted small', text: 'パソコンの通知はブラウザの設定で止められています。' })
+      : perm === 'unsupported' ? null
+      : h('button', { class: 'ghost small', type: 'button', text: 'パソコンの通知をオンにする', onclick: () => notifier.askPermission() }),
+    pipOk && !pipWin ? h('button', { class: 'btn small', type: 'button', text: '手前に出す小窓で開く', onclick: openPip }) : null,
+    pipWin ? h('p', { class: 'small', text: '✓ 手前に出る小窓で表示中' }) : null,
+    h('button', { class: 'linkbtn', type: 'button', text: '試しに鳴らす', onclick: () => notifier.test() }),
+    h('p', { class: 'muted small', text: pipOk ? '小窓はゲームを全画面にしても手前に残ります。勧誘が来たら小窓が光って音が鳴ります。' : 'このブラウザは手前に出す小窓に対応していません（Chrome / Edge で使えます）。' }));
+
+  el.replaceChildren(...[
     h('div', { class: 'desk-h' }, h('div', {}, h('p', { class: 'kicker', text: 'プレイ中の' }), h('h2', { text: 'おとも' })),
-      mini ? null : h('button', { class: 'ghost small', type: 'button', text: '小窓で開く ↗', onclick: () => window.open(`${location.pathname}?mini=1#/otomo`, 'gensoDesk', 'width=380,height=780') })),
-    h('div', { class: 'desk-grid' }, counters, timer, reminders, earn, memo),
+      mini || pipWin ? null : h('button', { class: 'ghost small', type: 'button', text: pipOk ? '手前に出す小窓 ↗' : '小窓で開く ↗', onclick: () => pipOk ? openPip() : window.open(`${location.pathname}?mini=1#/otomo`, 'gensoDesk', 'width=380,height=780') })),
+    notifier.notices.length ? h('div', { class: 'inbox' }, notifier.render(noticeActions)) : null,
+    h('div', { class: 'desk-grid' }, counters, timer, reminders, earn, memo, notifyCard),
+  ].filter(Boolean),
     h('p', { class: 'muted small', text: '入れた内容は、このブラウザの中だけに保存されます。' }));
   if (fid) el.querySelector(`[data-fid="${fid}"]`)?.focus();
 };
@@ -483,6 +502,7 @@ const render = () => {
   viewTicks = new Set();
   $('view').replaceChildren(...pages[r]());
   document.title = `${NAV.find(n => n[0] === r)[1]}｜元素騎士放送局`;
+  if (typeof notifier !== 'undefined') renderToasts();
 };
 addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); $('view').focus({ preventScroll: true }); });
 addEventListener('storage', ev => { if (ev.key === KEY) { load(); renderDesk(); } });
@@ -492,13 +512,34 @@ addEventListener('keydown', ev => {
   }
 });
 
+/* ---------- 知らせ ---------- */
+const pipOk = 'documentPictureInPicture' in window && !mini;
+// おともが本体の画面に見えているときは、そちらの中に出すので右上には出さない
+const renderToasts = () => { const deskShown = !pipWin && deskEl.isConnected && deskEl.offsetParent !== null; $('toasts').replaceChildren(...(deskShown ? [] : [notifier.render(noticeActions)])); };
+addEventListener('resize', () => renderToasts());
+const notifier = createNotifier({ h, onChange: (o = {}) => { renderToasts(); renderDesk(); if (o.flash) flash(); } });
+const noticeActions = n => n.kind === 'invite' ? [
+  h('button', { type: 'button', class: 'btn small', text: '行く', onclick: async () => { const err = await answerInvite(boardStore, n.inv, true); notifier.dismiss(n.id); if (err) notifier.push({ id: `err:${Date.now()}`, kind: 'info', title: 'うまくいきませんでした', body: err }); else notifier.push({ id: `ok:${n.id}`, kind: 'info', title: '勧誘を受けました', body: `${n.inv.place}${n.inv.ch ? `・ch${n.inv.ch}` : ''}へ。参加待ちはオフにしました。` }); if (route() === 'board') render(); } }),
+  h('button', { type: 'button', class: 'ghost small', text: '見送る', onclick: async () => { await answerInvite(boardStore, n.inv, false); notifier.dismiss(n.id); if (route() === 'board') render(); } }),
+] : [];
+async function openPip() {
+  try {
+    pipWin = await openFloating({ node: deskEl, onClose: () => { pipWin = null; document.body.classList.remove('desk-out'); renderDesk(); renderToasts(); } });
+    if (pipWin) { document.body.classList.add('desk-out'); renderToasts(); }
+    if (pipWin) {
+      pipWin.addEventListener('keydown', ev => { if (ev.key === '+' && !/INPUT|TEXTAREA|SELECT/.test(pipWin.document.activeElement?.tagName || '')) { const c = S.counters[0]; if (!c.startedAt) c.startedAt = Date.now(); c.n += 1; save(); renderDesk(); } });
+      renderDesk();
+    }
+  } catch { pipWin = null; }
+}
+
 /* ---------- 起動 ---------- */
 load(); applyTheme();
 if (mini) document.body.classList.add('mini');
 renderDesk(); render();
 await loadData();
 featured = pickFeatured();
-if (boardOn()) keepAlive(boardStore);
+if (boardOn()) keepAlive(boardStore, n => notifier.push(n), D.tower);
 $('fetched').textContent = D.videos.fetchedAt ? `最終更新 ${fStamp.format(new Date(D.videos.fetchedAt))}` : 'データ取得前です。';
 renderTicker(); renderMonitor(); render();
 setInterval(async () => { await loadData(); if (!playing) { featured = pickFeatured(); renderMonitor(); } renderTicker(); if (route() === 'home' && !mini) render(); }, 15 * 60000);

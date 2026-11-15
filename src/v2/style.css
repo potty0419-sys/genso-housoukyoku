@@ -302,3 +302,49 @@ body.mini .brand-text small { display: none; }
 .live-dot { margin-left: auto; }
 .live-dot::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--wind); margin-right: 5px; vertical-align: 1px; }
 @media (max-width: 520px) { .stats { grid-template-columns: auto 1fr auto 1fr; } }
+
+/* 席（募集カード） */
+.seats { display: grid; gap: 4px; }
+.seat { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; background: var(--bg2); min-height: 36px; }
+.seat.open { border: 1px dashed var(--line); background: transparent; }
+.seat.open.ok { border-color: var(--gold); }
+.seat.me { box-shadow: 0 0 0 1px var(--gold) inset; }
+.seat .btn, .seat .linkbtn { margin-left: auto; }
+.role-tag { flex-shrink: 0; min-width: 56px; text-align: center; font-size: 11.500px; font-weight: 800; padding: 1px 6px; border-radius: 4px; background: var(--raised); color: var(--muted); }
+.seat.host .role-tag { color: var(--gold); }
+.bcard.joined { border-color: var(--live); }
+.invbox { border-top: 1px solid var(--line); padding-top: 10px; }
+.invform { display: grid; gap: 10px; }
+.invform fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
+.invform legend { font-size: 12.500px; font-weight: 800; color: var(--muted); margin-bottom: 4px; }
+.field.inline { grid-template-columns: auto 1fr; align-items: center; gap: 10px; max-width: 420px; }
+.field.inline span { white-space: nowrap; }
+select { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; min-width: 0; }
+.grow { flex: 1 1 200px; width: auto !important; }
+.myname { margin-bottom: 14px; }
+.sent { color: var(--gold); font-weight: 700; }
+.toggle { display: flex; gap: 8px; align-items: center; font-size: 13.500px; }
+.toggle input { width: 18px; height: 18px; accent-color: var(--gold); }
+
+/* 知らせ */
+.toasts { position: fixed; top: 112px; right: 16px; z-index: 55; width: min(360px, calc(100vw - 32px)); pointer-events: none; }
+.toasts-in { display: grid; gap: 8px; }
+.toast { pointer-events: auto; background: var(--panel); border: 1px solid var(--line-strong); border-left: 4px solid var(--gold); border-radius: 10px; padding: 12px 14px; box-shadow: 0 16px 40px rgba(0,0,0,.45); display: grid; gap: 4px; animation: pop .25s ease-out; }
+.toast.invite { border-left-color: var(--live); }
+.toast b { font-weight: 800; }
+.toast p { font-size: 13px; color: var(--muted); }
+.inbox { margin-bottom: 12px; }
+.inbox .toast { box-shadow: none; }
+body.pip .toasts { display: none; }
+@keyframes pop { from { transform: translateY(-6px); opacity: 0; } }
+
+/* 手前に出る小窓 */
+body.pip { min-height: 0; }
+body.pip .pip-wrap { padding: 12px; }
+body.pip .desk { display: block !important; position: static; max-height: none; }
+body.pip .desk-h .kicker { display: none; }
+
+/* おともを小窓に出している間は、本体を1列に */
+@media (min-width: 1180px) { body.desk-out:not([data-route="otomo"]) .shell { grid-template-columns: minmax(0, 1fr); } }
+body.desk-out[data-route="otomo"] main { display: block; }
+body.desk-out[data-route="otomo"] #view::before { content: "おともは手前の小窓に出ています。小窓を閉じるとここに戻ります。"; display: block; padding: 24px; border: 1px dashed var(--line); border-radius: var(--r); color: var(--muted); }

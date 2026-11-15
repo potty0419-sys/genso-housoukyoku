@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Test
         run: node --test tests/fetch_youtube.test.mjs tests/site_data.test.mjs tests/store.test.mjs
       - name: Fetch YouTube data

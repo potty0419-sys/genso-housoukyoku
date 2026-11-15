@@ -1,0 +1,7 @@
+logs/
+.DS_Store
+node_modules/
+.env
+poc-check/
+tests/.chrome-*/
+CLAUDE.md

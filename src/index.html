@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="配信、仲間探し、ゲームのおともに。元素騎士放送局です。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://i.ytimg.com; frame-src https://www.youtube-nocookie.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>元素騎士放送局 | ゲームのそばに、いつもの場所。</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">本文へ移動</a>
+  <div class="air-strip"><div class="shell air-inner"><span class="air-label"><i class="status-dot"></i> ON AIR</span><span id="station-live" class="live-badge" hidden>LIVE</span><span id="station-status">放送予定を読み込み中…</span><span class="strip-note">ポッティ チャンネルのたまり場</span></div></div>
+  <header class="site-header shell">
+    <a class="brand" href="#/" aria-label="元素騎士放送局 トップ"><span class="brand-icon" aria-hidden="true">波</span><span>元素騎士<span class="brand-lime">放送局</span><small>ポッティと、ゲームのある毎日。</small></span></a>
+    <div class="header-controls"><button id="theme-toggle" class="quiet" aria-pressed="false">ライトモード</button><button id="nagara-toggle" class="quiet" aria-pressed="false">ながらモード <span>切</span></button></div>
+  </header>
+  <div class="nav-wrap"><nav class="shell main-nav" aria-label="メインメニュー">
+    <a href="#/">トップ</a><a href="#/videos">動画</a><a href="#/board">パーティ募集</a><a href="#/tools">ツール</a><a href="#/lounge">ながら部屋</a><a href="#/guide">はじめての人へ</a>
+  </nav></div>
+  <main id="main" class="shell" tabindex="-1"><p class="empty">放送局の準備中…</p></main>
+  <footer class="site-footer shell"><a class="footer-brand" href="#/">元素騎士放送局<span class="badge">サンプル POC</span></a><p>ゲームのそばに、いつもの場所。</p><p>非公式ファンサイトの試作です。配信・動画はYouTubeの取得情報です。ゲーム情報・換算レートはサンプルです。<br>投稿と記録はこのブラウザだけに保存されます。連絡はゲーム内で。</p><a href="#/guide">はじめての人へ</a><span class="footer-copy">© 2026 元素騎士放送局 POC</span></footer>
+  <dialog id="video-dialog" aria-labelledby="video-dialog-title"><div class="modal-head"><h2 id="video-dialog-title">動画</h2><button id="close-video" class="quiet" aria-label="動画を閉じる">閉じる ×</button></div><div id="video-frame"></div><p class="muted">YouTubeのプライバシー強化モードで再生します。配信状態・再生数は最終取得時点の情報です。</p></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><p>このサイトを利用するには JavaScript を有効にしてください。</p></noscript>
+</body>
+</html>

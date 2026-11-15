@@ -1,0 +1,10 @@
+{
+  "features": { "board": false, "hitokoto": false },
+  "jobs": ["ファイター", "ナイト", "ウィザード", "ビショップ", "クレリック", "モンク", "シーフ", "アサシン", "その他"],
+  "purposes": ["ドラタワ初級", "ドラタワ中級", "ドラタワ上級", "ギルド防衛戦", "レベリング", "金策", "ボス討伐", "その他"],
+  "ngWords": ["禁止語サンプル", "荒らし例", "迷惑ワード例"],
+  "guildDefenseTimes": ["15:00", "20:00", "21:00", "22:00"],
+  "guildDefenseDurationMinutes": 30,
+  "mrPerUsd": 10000,
+  "sample": true
+}

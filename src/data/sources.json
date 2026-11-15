@@ -1,0 +1,54 @@
+{
+  "pottyChannelId": "UCQgeDqofVkuRcrLXZzHGbTw",
+  "pottyUploadsPlaylistId": "UUQgeDqofVkuRcrLXZzHGbTw",
+  "keywords": [
+    "元素騎士",
+    "GensoKishi",
+    "Genso Kishi",
+    "げんそきし"
+  ],
+  "searchQuery": "元素騎士",
+  "popularDays": 30,
+  "popularMax": 24,
+  "perChannelMax": 3,
+  "pottyMax": 30,
+  "scheduleDaysAhead": 30,
+  "tagRules": {
+    "ドラタワ": [
+      "ドラタワ",
+      "ドラゴンタワー"
+    ],
+    "金策": [
+      "金策",
+      "時給",
+      "稼ぎ"
+    ],
+    "防衛戦": [
+      "防衛戦"
+    ],
+    "宝くじ": [
+      "宝くじ",
+      "ラキチャン"
+    ],
+    "装備": [
+      "装備",
+      "LR",
+      "SR"
+    ],
+    "スキル": [
+      "スキル"
+    ],
+    "ビショップ": [
+      "ビショップ"
+    ],
+    "レベリング": [
+      "レベリング",
+      "レベル上げ"
+    ]
+  },
+  "excludeKeywords": [
+    "Mabinogi",
+    "瑪奇",
+    "マビノギ"
+  ]
+}

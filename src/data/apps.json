@@ -1,0 +1,7 @@
+[
+  {"id":"force","name":"エレメンタルフォース","author":"ポッティ製","description":"冒険のおともになるツールを検討中。機能・仕様は仮の紹介文です。","status":"開発中","url":null,"symbol":"力","sample":true},
+  {"id":"dig","name":"元素素材発掘","author":"ポッティ製","description":"素材探しを助けるアプリの紹介枠です。提供時期は未定です。","status":"開発中","url":null,"symbol":"鉱","sample":true},
+  {"id":"nft","name":"元素騎士NFT図鑑","author":"ポッティ製","description":"集めて眺める図鑑の構想枠。掲載内容や機能は未定です。","status":"構想","url":null,"symbol":"図","sample":true},
+  {"id":"slot1","name":"あなたのツールを掲載","author":"掲載枠","description":"プレイヤーが作る便利なツールのための空き枠です。","status":"準備中","url":null,"symbol":"＋","sample":true},
+  {"id":"slot2","name":"あなたのツールを掲載","author":"掲載枠","description":"小さなアイデアから、冒険のおともに。掲載受付は準備中です。","status":"準備中","url":null,"symbol":"＋","sample":true}
+]

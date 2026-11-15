@@ -1,0 +1,26 @@
+{
+  "now": "2026-11-15T03:00:00Z",
+  "uploadIds": ["AAAAAAAAAA1", "AAAAAAAAAA2", "AAAAAAAAAA3", "AAAAAAAAAA4", "AAAAAAAAAA5", "AAAAAAAAAA6"],
+  "upcomingIds": ["BBBBBBBBBB1", "BBBBBBBBBB2", "BBBBBBBBBB3", "BBBBBBBBBB4", "AAAAAAAAAA3"],
+  "liveIds": ["CCCCCCCCCC1", "CCCCCCCCCC2", "CCCCCCCCCC3"],
+  "popularIds": ["DDDDDDDDDD1", "DDDDDDDDDD2", "DDDDDDDDDD3", "DDDDDDDDDD4", "AAAAAAAAAA1", "AAAAAAAAAA2", "AAAAAAAAAA3", "AAAAAAAAAA5", "BBBBBBBBBB4"],
+  "videos": [
+    {"id":"AAAAAAAAAA1","snippet":{"title":"【元素騎士】金策とドラゴンタワー","description":"配信記録","channelId":"UCQgeDqofVkuRcrLXZzHGbTw","channelTitle":"ポッティ","publishedAt":"2026-11-14T12:00:00Z","liveBroadcastContent":"none","thumbnails":{"medium":{"url":"https://i.ytimg.com/vi/AAAAAAAAAA1/mqdefault.jpg"}}},"statistics":{"viewCount":"900"},"contentDetails":{"duration":"PT2H3M4S"},"liveStreamingDetails":{"actualStartTime":"2026-11-14T12:00:00Z","actualEndTime":"2026-11-14T14:03:04Z"},"status":{"privacyStatus":"public"}},
+    {"id":"AAAAAAAAAA2","snippet":{"title":"ビショップのスキル","description":"GENSOKISHI guide","channelId":"UCQgeDqofVkuRcrLXZzHGbTw","channelTitle":"ポッティ","publishedAt":"2026-11-13T12:00:00Z","liveBroadcastContent":"none"},"statistics":{"viewCount":"800"},"contentDetails":{"duration":"PT3M"}},
+    {"id":"AAAAAAAAAA3","snippet":{"title":"旅行の雑談","description":"旅のお話","channelId":"UCQgeDqofVkuRcrLXZzHGbTw","channelTitle":"ポッティ","publishedAt":"2026-11-14T12:00:00Z","liveBroadcastContent":"upcoming"},"liveStreamingDetails":{"scheduledStartTime":"2026-11-16T12:00:00Z"}},
+    {"id":"AAAAAAAAAA4","snippet":{"title":"雑談ライブ","channelId":"UCQgeDqofVkuRcrLXZzHGbTw","channelTitle":"ポッティ","liveBroadcastContent":"live"},"liveStreamingDetails":{"actualStartTime":"2026-11-15T02:30:00Z"}},
+    {"id":"AAAAAAAAAA5","snippet":{"title":"元素騎士 非公開","channelId":"UCQgeDqofVkuRcrLXZzHGbTw","channelTitle":"ポッティ","publishedAt":"2026-11-14T12:00:00Z","liveBroadcastContent":"none"},"statistics":{"viewCount":"9999"},"contentDetails":{"duration":"PT10M"},"status":{"privacyStatus":"unlisted"}},
+    {"id":"AAAAAAAAAA6","snippet":{"title":"別のゲーム","description":"関係のない動画","channelId":"UCQgeDqofVkuRcrLXZzHGbTw","channelTitle":"ポッティ","publishedAt":"2026-11-14T12:00:00Z","liveBroadcastContent":"none"},"statistics":{"viewCount":"500"},"contentDetails":{"duration":"PT10M"}},
+    {"id":"BBBBBBBBBB1","snippet":{"title":"元素騎士 予約","channelId":"community1","channelTitle":"みんなのチャンネル","liveBroadcastContent":"upcoming","thumbnails":{"high":{"url":"https://i.ytimg.com/vi/BBBBBBBBBB1/hqdefault.jpg"}}},"liveStreamingDetails":{"scheduledStartTime":"2026-11-15T04:00:00Z"}},
+    {"id":"BBBBBBBBBB2","snippet":{"title":"元素騎士 古い予約","channelId":"community1","channelTitle":"みんな","liveBroadcastContent":"upcoming"},"liveStreamingDetails":{"scheduledStartTime":"2021-01-01T00:00:00Z"}},
+    {"id":"BBBBBBBBBB3","snippet":{"title":"元素騎士 遠い予約","channelId":"community1","channelTitle":"みんな","liveBroadcastContent":"upcoming"},"liveStreamingDetails":{"scheduledStartTime":"2027-01-01T00:00:00Z"}},
+    {"id":"BBBBBBBBBB4","snippet":{"title":"別のゲーム","channelId":"community1","channelTitle":"みんな","publishedAt":"2026-11-14T00:00:00Z","liveBroadcastContent":"none"},"contentDetails":{"duration":"PT4M"},"statistics":{"viewCount":"10000"}},
+    {"id":"CCCCCCCCCC1","snippet":{"title":"Genso Kishi live","channelId":"community2","channelTitle":"生配信チャンネル","liveBroadcastContent":"live"},"liveStreamingDetails":{"actualStartTime":"2026-11-15T01:00:00Z"}},
+    {"id":"CCCCCCCCCC2","snippet":{"title":"元素騎士 終了済み","channelId":"community2","channelTitle":"みんな","liveBroadcastContent":"live"},"liveStreamingDetails":{"actualStartTime":"2026-11-14T01:00:00Z","actualEndTime":"2026-11-14T02:00:00Z"}},
+    {"id":"CCCCCCCCCC3","snippet":{"title":"げんそきし 開始不明","channelId":"community2","channelTitle":"みんな","liveBroadcastContent":"live"},"liveStreamingDetails":{}},
+    {"id":"DDDDDDDDDD1","snippet":{"title":"元素騎士 LR装備","channelId":"popular1","channelTitle":"人気チャンネル","publishedAt":"2026-11-12T00:00:00Z","liveBroadcastContent":"none","thumbnails":{"medium":{"url":"https://i.ytimg.com/vi/DDDDDDDDDD1/mqdefault.jpg"}}},"statistics":{"viewCount":"6000"},"contentDetails":{"duration":"PT3M1S"}},
+    {"id":"DDDDDDDDDD2","snippet":{"title":"元素騎士 レベル上げ","channelId":"popular1","channelTitle":"人気チャンネル","publishedAt":"2026-11-11T00:00:00Z","liveBroadcastContent":"none"},"statistics":{"viewCount":"5000"},"contentDetails":{"duration":"PT1M"}},
+    {"id":"DDDDDDDDDD3","snippet":{"title":"げんそきし 防衛戦","channelId":"popular1","channelTitle":"人気チャンネル","publishedAt":"2026-11-10T00:00:00Z","liveBroadcastContent":"none"},"statistics":{"viewCount":"4000"},"contentDetails":{"duration":"PT5M"}},
+    {"id":"DDDDDDDDDD4","snippet":{"title":"元素騎士 ラキチャン","channelId":"popular1","channelTitle":"人気チャンネル","publishedAt":"2026-11-09T00:00:00Z","liveBroadcastContent":"none"},"statistics":{"viewCount":"3000"},"contentDetails":{"duration":"PT5M"}}
+  ]
+}

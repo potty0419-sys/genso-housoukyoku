@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>元素騎士放送局</title>
+<meta name="description" content="元素騎士オンラインの配信予定・人気動画・周回のおともツールをまとめた、非公式のファンサイトです。">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-route="home">
+<a class="skip" href="#view">本文へ移動</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#/" aria-label="元素騎士放送局 トップ">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M20 2 36 11v18L20 38 4 29V11z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M11 22c2.2-5 4.4-5 6.6 0s4.4 5 6.600 0 4.400-5 6.600 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="20" cy="12.500" r="1.800" fill="currentColor"/>
+      </svg>
+      <span class="brand-text"><b>元素騎士放送局</b><small>非公式ファンステーション</small></span>
+    </a>
+    <nav class="nav" aria-label="メニュー" id="nav"></nav>
+    <div class="top-tools">
+      <span class="clock" id="clock" aria-label="日本時間"></span>
+      <button class="ghost" id="themeBtn" type="button"></button>
+    </div>
+  </div>
+  <div class="ticker" id="ticker" role="status"></div>
+</header>
+
+<div class="shell">
+  <main>
+    <section id="monitor" class="monitor" aria-label="モニター" hidden></section>
+    <div id="view" tabindex="-1"></div>
+  </main>
+  <aside id="desk" class="desk" aria-label="ながらデスク"></aside>
+</div>
+
+<footer class="foot">
+  <p>元素騎士放送局は、プレイヤーが運営する非公式のファンサイトです。ゲームの運営会社とは関係ありません。「元素騎士オンライン」および関連する名称は各権利者のものです。</p>
+  <p>配信・動画の情報は YouTube から自動で取得しています。<span id="fetched"></span></p>
+  <p><a href="https://www.youtube.com/@potty0908" target="_blank" rel="noopener">ポッティ チャンネル</a></p>
+</footer>
+
+<div class="flash" id="flash" aria-hidden="true"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

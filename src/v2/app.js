@@ -1,5 +1,6 @@
 // 元素騎士放送局 v2 — ビルドなしの単一モジュール。
 // 外部から来た文字列（YouTubeのタイトル等）は必ず textContent で入れる。innerHTML は使わない。
+import { LocalStore, mountBoard, keepAlive } from './board.js';
 
 /* ---------- 小さな道具 ---------- */
 const h = (tag, attrs = {}, ...kids) => {
@@ -68,8 +69,8 @@ const getJson = async (name, fallback) => {
 };
 const cleanVideos = list => (Array.isArray(list) ? list : []).filter(v => v && VIDEO_ID.test(v.id) && typeof v.title === 'string');
 const loadData = async () => {
-  const [s, v, c, a, g, l] = await Promise.all([
-    getJson('schedule', D.schedule), getJson('videos', D.videos), getJson('config', {}), getJson('apps', []), getJson('glossary', []), getJson('links', []),
+  const [s, v, c, a, g, l, tw] = await Promise.all([
+    getJson('schedule', D.schedule), getJson('videos', D.videos), getJson('config', {}), getJson('apps', []), getJson('glossary', []), getJson('links', []), getJson('tower', null),
   ]);
   D.schedule = { fetchedAt: s?.fetchedAt || null, items: cleanVideos(s?.items).filter(i => Number.isFinite(Date.parse(i.start))) };
   D.videos = { fetchedAt: v?.fetchedAt || null, potty: cleanVideos(v?.potty), popular: cleanVideos(v?.popular) };
@@ -77,6 +78,7 @@ const loadData = async () => {
   D.apps = Array.isArray(a) ? a : [];
   D.glossary = Array.isArray(g) ? g : [];
   D.links = Array.isArray(l) ? l : [];
+  D.tower = tw && Array.isArray(tw.towers) ? tw : null;
 };
 const rate = () => { const r = num(S.rate); return r > 0 ? r : (num(D.config.mrPerUsd) > 0 ? num(D.config.mrPerUsd) : 10000); };
 const liveItems = () => D.schedule.items.filter(i => i.status === 'live');
@@ -310,6 +312,11 @@ const pages = {
   },
 
   board() {
+    if (boardOn() && D.tower) {
+      const box = h('div', { class: 'board' });
+      unmountBoard = mountBoard(box, { h, T: D.tower, ng: D.config.ngWords || [], store: boardStore, fmt: { left: fmtLeft, time: t => fTime.format(new Date(t)) } });
+      return [section('ドラゴンタワー', '仲間さがし', box)];
+    }
     return [section('仲間さがし', 'パーティ募集',
       h('div', { class: 'card wide' },
         h('p', { class: 'pill off', text: '準備中' }),
@@ -461,11 +468,15 @@ const renderDesk = () => {
 };
 
 /* ---------- ルーター ---------- */
-const NAV = [['home', 'トップ'], ['videos', '動画'], ['kouryaku', '攻略'], ['otomo', 'おとも'], ['board', 'パーティ募集'], ['guide', 'はじめての人へ']];
+const NAV = [['home', 'トップ'], ['videos', '動画'], ['kouryaku', '攻略'], ['otomo', 'おとも'], ['board', '仲間さがし'], ['guide', 'はじめての人へ']];
 const ALIAS = { desk: 'otomo', tools: 'kouryaku' };
 const route = () => { let r = location.hash.replace(/^#\/?/, '') || 'home'; r = ALIAS[r] || r; return pages[r] ? r : 'home'; };
 const mini = new URLSearchParams(location.search).has('mini');
+let unmountBoard = null;
+const boardStore = new LocalStore();
+const boardOn = () => D.config?.features?.board === true || new URLSearchParams(location.search).has('boardtest');
 const render = () => {
+  unmountBoard?.(); unmountBoard = null;
   const r = mini ? 'otomo' : route();
   document.body.dataset.route = r;
   $('nav').replaceChildren(...NAV.map(([k, l]) => h('a', { href: `#/${k === 'home' ? '' : k}`, 'aria-current': k === r ? 'page' : null, text: l })));
@@ -487,6 +498,7 @@ if (mini) document.body.classList.add('mini');
 renderDesk(); render();
 await loadData();
 featured = pickFeatured();
+if (boardOn()) keepAlive(boardStore);
 $('fetched').textContent = D.videos.fetchedAt ? `最終更新 ${fStamp.format(new Date(D.videos.fetchedAt))}` : 'データ取得前です。';
 renderTicker(); renderMonitor(); render();
 setInterval(async () => { await loadData(); if (!playing) { featured = pickFeatured(); renderMonitor(); } renderTicker(); if (route() === 'home' && !mini) render(); }, 15 * 60000);

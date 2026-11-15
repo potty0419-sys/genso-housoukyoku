@@ -1,0 +1,50 @@
+[
+  {
+    "group": "公式",
+    "items": [
+      {
+        "name": "公式サイト",
+        "url": "https://genso.game/ja/",
+        "note": "ゲームの紹介・ダウンロード"
+      },
+      {
+        "name": "公式のお知らせ",
+        "url": "https://genso.game/ja/news/special_news/",
+        "note": "メンテナンス・アップデート情報"
+      },
+      {
+        "name": "公式X（日本語）",
+        "url": "https://x.com/genso_meta_jp",
+        "note": "最新情報はまずここ"
+      },
+      {
+        "name": "公式X（グローバル）",
+        "url": "https://twitter.com/genso_meta",
+        "note": "英語の告知"
+      },
+      {
+        "name": "公式YouTube",
+        "url": "https://www.youtube.com/channel/UCMi4wGMEWgC9VVps8d_NLDA",
+        "note": "PV・装備紹介"
+      },
+      {
+        "name": "公式Discord",
+        "url": "https://discord.gg/UsHXNvg8Ct",
+        "note": "プレイヤー同士の交流"
+      },
+      {
+        "name": "公式LINE",
+        "url": "https://line.me/R/ti/p/%40846fieqo",
+        "note": "お知らせを受け取る"
+      }
+    ]
+  },
+  {
+    "group": "攻略サイト",
+    "items": []
+  },
+  {
+    "group": "プレイヤーが作ったツール",
+    "items": []
+  }
+]

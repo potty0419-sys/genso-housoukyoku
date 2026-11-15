@@ -62,20 +62,21 @@ const load = () => {
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* noop */ } };
 
 /* ---------- データ ---------- */
-const D = { schedule: { fetchedAt: null, items: [] }, videos: { fetchedAt: null, potty: [], popular: [] }, config: {}, apps: [], glossary: [] };
+const D = { schedule: { fetchedAt: null, items: [] }, videos: { fetchedAt: null, potty: [], popular: [] }, config: {}, apps: [], glossary: [], links: [] };
 const getJson = async (name, fallback) => {
   try { const r = await fetch(`../data/${name}.json`, { cache: 'no-cache' }); if (!r.ok) throw 0; return await r.json(); } catch { return fallback; }
 };
 const cleanVideos = list => (Array.isArray(list) ? list : []).filter(v => v && VIDEO_ID.test(v.id) && typeof v.title === 'string');
 const loadData = async () => {
-  const [s, v, c, a, g] = await Promise.all([
-    getJson('schedule', D.schedule), getJson('videos', D.videos), getJson('config', {}), getJson('apps', []), getJson('glossary', []),
+  const [s, v, c, a, g, l] = await Promise.all([
+    getJson('schedule', D.schedule), getJson('videos', D.videos), getJson('config', {}), getJson('apps', []), getJson('glossary', []), getJson('links', []),
   ]);
   D.schedule = { fetchedAt: s?.fetchedAt || null, items: cleanVideos(s?.items).filter(i => Number.isFinite(Date.parse(i.start))) };
   D.videos = { fetchedAt: v?.fetchedAt || null, potty: cleanVideos(v?.potty), popular: cleanVideos(v?.popular) };
   D.config = c && typeof c === 'object' ? c : {};
   D.apps = Array.isArray(a) ? a : [];
   D.glossary = Array.isArray(g) ? g : [];
+  D.links = Array.isArray(l) ? l : [];
 };
 const rate = () => { const r = num(S.rate); return r > 0 ? r : (num(D.config.mrPerUsd) > 0 ? num(D.config.mrPerUsd) : 10000); };
 const liveItems = () => D.schedule.items.filter(i => i.status === 'live');
@@ -227,10 +228,10 @@ const pages = {
       section('よく見られている', '直近30日の人気動画',
         pop.length ? h('div', { class: 'vgrid' }, pop.map(videoCard)) : h('div', { class: 'empty' }, h('p', { text: '動画のデータを取得中です。' })),
         h('p', { class: 'more' }, h('a', { class: 'link', href: '#/videos', text: '動画をもっと見る →' }))),
-      section('周回のおともに', 'ながらデスク',
+      section('プレイ中に', 'おとも',
         h('div', { class: 'cards3' },
-          h('a', { class: 'tile', href: '#/desk' }, h('b', { text: '周回カウンター・タイマー' }), h('span', { class: 'muted', text: '数える、計る、稼ぎをメモする。ゲームの横に置いておく道具です。' })),
-          h('a', { class: 'tile', href: '#/tools' }, h('b', { text: '計算ツール' }), h('span', { class: 'muted', text: 'mRとドルの換算、売買の還元率、ドラタワのコイン計算。' })),
+          h('a', { class: 'tile', href: '#/otomo' }, h('b', { text: 'おとも' }), h('span', { class: 'muted', text: '周回カウンター・タイマー・稼ぎメモ。ゲームの横に置いておく道具です。' })),
+          h('a', { class: 'tile', href: '#/kouryaku' }, h('b', { text: '攻略' }), h('span', { class: 'muted', text: '公式情報や攻略サイトへのリンクと、mR換算・コイン計算。' })),
           h('a', { class: 'tile', href: '#/board' }, h('b', { text: 'パーティ募集' }), h('span', { class: 'muted', text: '仲間さがしの掲示板。いま準備しています。' })))),
     ];
   },
@@ -262,7 +263,7 @@ const pages = {
     return [section('動画', '元素騎士の動画', wrap)];
   },
 
-  tools() {
+  kouryaku() {
     const out = () => h('output', { class: 'result' });
     // 換算
     const o1 = out(); const c = { mr: '', usd: '' };
@@ -282,8 +283,19 @@ const pages = {
       const left = Math.max(0, g - hv), runs = Math.ceil(left / p);
       o3.textContent = left === 0 ? '目標に届いています。' : `あと ${fmtInt(left)}枚・${fmtInt(runs)}回${d > 0 ? `（約${Math.ceil(runs / d)}日）` : ''}`;
     };
+    const safeUrl = u => (typeof u === 'string' && /^https:\/\//.test(u)) ? u : null;
+    const linkGroups = D.links.filter(g => g && Array.isArray(g.items));
     return [
-      section('計算', '計算ツール',
+      section('攻略', '攻略に役立つリンク',
+        h('p', { class: 'note', text: '外部のサイトに移動します。古い情報が混ざっていることがあるので、日付も見ながら使ってください。' }),
+        linkGroups.map(g => h('div', { class: 'lgroup' },
+          h('h3', { class: 'lgroup-h', text: String(g.group || '') }),
+          g.items.length
+            ? h('ul', { class: 'links' }, g.items.filter(it => safeUrl(it.url)).map(it => h('li', {},
+                h('a', { href: safeUrl(it.url), target: '_blank', rel: 'noopener' },
+                  h('b', { text: String(it.name || '') }), h('span', { class: 'muted small', text: String(it.note || '') }), h('span', { class: 'arrow', 'aria-hidden': 'true', text: '↗' })))))
+            : h('p', { class: 'muted small empty-line', text: 'おすすめのサイトやツールを募集中です。ポッティのXやYouTubeのコメントで教えてください。' })))),
+      section('計算', '攻略に使える計算',
         h('p', { class: 'note', text: '換算レートは自分で入れる目安の数字です。実際の価格や換金を保証するものではありません。' }),
         h('div', { class: 'cards3' },
           h('div', { class: 'card' }, h('h3', { text: 'mR ⇔ ドル' }), field('mR', mrIn), field('ドル', usdIn), field('1ドルあたりのmR', rateIn, '変えると保存されます'), o1),
@@ -323,13 +335,13 @@ const pages = {
         h('ol', { class: 'steps' },
           h('li', {}, h('b', { text: '配信をのぞく' }), h('span', { class: 'muted', text: 'トップの番組表に、これからの元素騎士配信が自動で並びます。' })),
           h('li', {}, h('b', { text: '動画を流しておく' }), h('span', { class: 'muted', text: '動画はページを移っても再生が続きます。周回のBGMがわりに。' })),
-          h('li', {}, h('b', { text: 'デスクを横に置く' }), h('span', { class: 'muted', text: '「小窓で開く」を押すと、ゲームの横に置ける細い窓になります。' })))),
+          h('li', {}, h('b', { text: 'おともを横に置く' }), h('span', { class: 'muted', text: '「おとも」の「小窓で開く」を押すと、ゲームの横に置ける細い窓になります。' })))),
       section('ことば', '用語メモ',
         h('p', { class: 'note', text: '用語の説明は書きかけの仮の文です。正確な内容は公式の情報を確認してください。' }), q, list),
     ];
   },
 
-  desk() { return []; },
+  otomo() { return []; },
 };
 
 /* ---------- ながらデスク ---------- */
@@ -441,19 +453,20 @@ const renderDesk = () => {
     h('textarea', { rows: '4', maxlength: '2000', placeholder: 'ドロップ、買うもの、次にやること…', 'aria-label': 'メモ', 'data-fid': 'memo', oninput: ev => { S.memo = ev.target.value; save(); } }, S.memo || ''));
 
   el.replaceChildren(
-    h('div', { class: 'desk-h' }, h('div', {}, h('p', { class: 'kicker', text: 'ゲームの横に' }), h('h2', { text: 'ながらデスク' })),
-      mini ? null : h('button', { class: 'ghost small', type: 'button', text: '小窓で開く ↗', onclick: () => window.open(`${location.pathname}?mini=1#/desk`, 'gensoDesk', 'width=380,height=780') })),
+    h('div', { class: 'desk-h' }, h('div', {}, h('p', { class: 'kicker', text: 'プレイ中の' }), h('h2', { text: 'おとも' })),
+      mini ? null : h('button', { class: 'ghost small', type: 'button', text: '小窓で開く ↗', onclick: () => window.open(`${location.pathname}?mini=1#/otomo`, 'gensoDesk', 'width=380,height=780') })),
     h('div', { class: 'desk-grid' }, counters, timer, reminders, earn, memo),
     h('p', { class: 'muted small', text: '入れた内容は、このブラウザの中だけに保存されます。' }));
   if (fid) el.querySelector(`[data-fid="${fid}"]`)?.focus();
 };
 
 /* ---------- ルーター ---------- */
-const NAV = [['home', 'トップ'], ['videos', '動画'], ['desk', 'ながらデスク'], ['tools', 'ツール'], ['board', 'パーティ募集'], ['guide', 'はじめての人へ']];
-const route = () => { const r = location.hash.replace(/^#\/?/, '') || 'home'; return pages[r] ? r : 'home'; };
+const NAV = [['home', 'トップ'], ['videos', '動画'], ['kouryaku', '攻略'], ['otomo', 'おとも'], ['board', 'パーティ募集'], ['guide', 'はじめての人へ']];
+const ALIAS = { desk: 'otomo', tools: 'kouryaku' };
+const route = () => { let r = location.hash.replace(/^#\/?/, '') || 'home'; r = ALIAS[r] || r; return pages[r] ? r : 'home'; };
 const mini = new URLSearchParams(location.search).has('mini');
 const render = () => {
-  const r = mini ? 'desk' : route();
+  const r = mini ? 'otomo' : route();
   document.body.dataset.route = r;
   $('nav').replaceChildren(...NAV.map(([k, l]) => h('a', { href: `#/${k === 'home' ? '' : k}`, 'aria-current': k === r ? 'page' : null, text: l })));
   viewTicks = new Set();
